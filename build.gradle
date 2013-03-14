@@ -47,6 +47,8 @@ tasks.withType(Compile) {
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:1.8.9'
     compile 'commons-lang:commons-lang:20030203.000129'
+    compile 'org.slf4j:slf4j-api:1.7.2'
+    compile 'ch.qos.logback:logback-classic:1.0.9'
     providedCompile 'javax.servlet:servlet-api:2.5'
     providedCompile 'javax.servlet.jsp:jsp-api:2.1'
     testCompile 'junit:junit:4.11'

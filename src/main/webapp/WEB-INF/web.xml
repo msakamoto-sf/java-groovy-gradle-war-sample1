@@ -13,8 +13,16 @@
         <servlet-name>HelloServlet</servlet-name>
         <servlet-class>net.glamenvseptzen.quickstart.HelloServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Groovlet</servlet-name>
+        <servlet-class>net.glamenvseptzen.quickstart.AdjustedGroovyServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HelloServlet</servlet-name>
         <url-pattern>/hello</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Groovlet</servlet-name>
+        <url-pattern>*.groovy</url-pattern>
     </servlet-mapping>
 </web-app>
