@@ -1,0 +1,74 @@
+apply plugin: 'groovy'
+apply plugin: 'war'
+apply plugin: 'jetty'
+apply plugin: 'tomcat'
+
+//defaultTasks 'test', 'war'
+defaultTasks 'classes'
+
+// See: https://github.com/bmuschko/gradle-tomcat-plugin
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.gradle.api.plugins:gradle-tomcat-plugin:0.9.7'
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+/* See:
+ * http://gradle.1045684.n5.nabble.com/Groovy-Java-mixed-codebase-td1435484.html
+ * http://gradle.1045684.n5.nabble.com/source-set-depends-on-another-source-set-td1436006.html
+ */
+[sourceSets.main, sourceSets.test].each {
+    // compile java and groovy file at same time.
+    it.groovy.srcDirs += it.java.srcDirs
+    // disable java compilation
+    it.java.srcDirs = []
+}
+
+/* See:
+ * http://java.dzone.com/articles/gradle-goodness-set-java
+ * http://www.gradle.org/docs/current/dsl/org.gradle.api.tasks.compile.CompileOptions.html
+ */
+tasks.withType(Compile) {
+    sourceCompatibility = '1.7'
+    targetCompatibility = '1.7'
+    options.encoding = 'UTF-8'
+    options.debug = true
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:1.8.9'
+    compile 'commons-lang:commons-lang:20030203.000129'
+    providedCompile 'javax.servlet:servlet-api:2.5'
+    providedCompile 'javax.servlet.jsp:jsp-api:2.1'
+    testCompile 'junit:junit:4.11'
+
+    // See: https://github.com/bmuschko/gradle-tomcat-plugin
+    def tomcatVersion = '6.0.29'
+    tomcat "org.apache.tomcat:catalina:${tomcatVersion}",
+        "org.apache.tomcat:coyote:${tomcatVersion}",
+        "org.apache.tomcat:jasper:${tomcatVersion}"
+}
+
+war {
+    baseName = 'warsample1'
+    version = '1.0.0'
+}
+
+tomcatRun {
+    httpPort = 8090
+    reloadable = true
+    contextPath = '/warsample1'
+}
+
+jettyRun {
+    httpPort = 8190
+}
