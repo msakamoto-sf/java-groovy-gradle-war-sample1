@@ -33,6 +33,13 @@ repositories {
     it.java.srcDirs = []
 }
 
+// for Tomcat context auto reloading, change class file output path to '/WEB-INF/classes'
+sourceSets.main.output.classesDir = 'src/main/webapp/WEB-INF/classes'
+clean {
+    // add customized class output path to deletion targets of 'clean' task.
+    delete << 'src/main/webapp/WEB-INF/classes'
+}
+
 /* See:
  * http://java.dzone.com/articles/gradle-goodness-set-java
  * http://www.gradle.org/docs/current/dsl/org.gradle.api.tasks.compile.CompileOptions.html
@@ -54,10 +61,16 @@ dependencies {
     testCompile 'junit:junit:4.11'
 
     // See: https://github.com/bmuschko/gradle-tomcat-plugin
-    def tomcatVersion = '6.0.29'
-    tomcat "org.apache.tomcat:catalina:${tomcatVersion}",
-        "org.apache.tomcat:coyote:${tomcatVersion}",
-        "org.apache.tomcat:jasper:${tomcatVersion}"
+//    def tomcatVersion = '6.0.36'
+//    tomcat "org.apache.tomcat:catalina:${tomcatVersion}",
+//        "org.apache.tomcat:coyote:${tomcatVersion}",
+//        "org.apache.tomcat:jasper:${tomcatVersion}"
+    def tomcatVersion = '7.0.37'
+    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+           "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}"
+    tomcat("org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}") {
+        exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
+    }
 }
 
 war {
